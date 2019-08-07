@@ -44,6 +44,21 @@ if (_shouldTrace)
     Microsoft.Rest.ServiceClientTracing.Enter(_invocationId, this, "@(Model.Name)", tracingParameters);
 }
 
+// Logging
+bool _shouldLog = _logger != null;
+string _logId = null;
+if (_shouldLog && _logger.IsEnabled(LogLevel.Information))
+{
+    _logId = Guid.NewGuid().ToString();
+    System.Collections.Generic.Dictionary<string, object> loggingParameters = new System.Collections.Generic.Dictionary<string, object>();
+@foreach (var parameter in Model.LogicalParameters.Where(p => !p.IsClientProperty))
+{
+    @:loggingParameters.Add("@(parameter.Name)", @(parameter.Name));
+}
+    loggingParameters.Add("cancellationToken", cancellationToken);
+    _logger.LogInformation($"{_logId} @(Model.Name): {loggingParameters.AsFormattedString()}");
+}
+
 // Construct URL
 @if (Model.IsAbsoluteUrl)
 {
@@ -283,6 +298,11 @@ if (_shouldTrace)
     Microsoft.Rest.ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
 }
 
+if (_shouldLog && _logger.IsEnabled(LogLevel.Information))
+{
+     _logger.LogInformation($"{_logId} Request: {(_httpRequest == null ? "{NULL}" : _httpRequest.ToString())}");
+}
+
 cancellationToken.ThrowIfCancellationRequested();
 @if (Model.ReturnType.Body.IsPrimaryType(KnownPrimaryType.Stream) || Model.HttpMethod == HttpMethod.Head)
 {
@@ -295,6 +315,11 @@ else
 if (_shouldTrace)
 {
     Microsoft.Rest.ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
+}
+
+if (_shouldLog && _logger.IsEnabled(LogLevel.Information))
+{
+    _logger.LogInformation($"{_logId} Response: {(_httpResponse == null ? "{NULL}" : _httpResponse.ToString())}");
 }
 
 System.Net.HttpStatusCode _statusCode = _httpResponse.StatusCode;
@@ -345,6 +370,11 @@ else
     if (_shouldTrace)
     {
         Microsoft.Rest.ServiceClientTracing.Error(_invocationId, ex);
+    }
+
+    if (_shouldLog && _logger.IsEnabled(LogLevel.Error))
+    {
+        _logger.LogError(ex, _logId);
     }
 
     _httpRequest.Dispose();
@@ -483,6 +513,11 @@ if ((int)_statusCode == @MethodCs.GetStatusCodeReference(responsePair.Key))
 if (_shouldTrace)
 {
     Microsoft.Rest.ServiceClientTracing.Exit(_invocationId, _result);
+}
+
+if (_shouldLog && _logger.IsEnabled(LogLevel.Information))
+{
+    _logger.LogInformation($"{_logId} Exit: {(_result == null ? "{NULL}" : _result.ToString())}");
 }
 
 return _result;

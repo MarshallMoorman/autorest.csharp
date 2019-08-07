@@ -8,6 +8,8 @@
 namespace @Settings.Namespace
 {
     using Microsoft.Rest;
+    using Microsoft.Extensions.Logging;
+    using System;
 @foreach (var usingString in Model.Usings) {
     @:using @usingString;
 }
