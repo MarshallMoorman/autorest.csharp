@@ -4,9 +4,11 @@
 @EmptyLine
 namespace @Settings.Namespace
 {
+    using System;
     using System.Linq;
     using System.IO;
     using Microsoft.Rest;
+    using Microsoft.Extensions.Logging;
 @foreach (var usingString in Model.Usings) {
     @:using @usingString;
 }
@@ -17,6 +19,12 @@ namespace @Settings.Namespace
     public partial class @(Model.TypeName) : Microsoft.Rest.IServiceOperations<@Model.CodeModel.Name>, I@(Model.TypeName)
     {
         /// <summary>
+        /// The logger used to log into Microsoft.Extensions.Logging
+        /// </summary>
+        private ILogger<@Model.TypeName> _logger;
+        @EmptyLine
+
+        /// <summary>
         /// Initializes a new instance of the @(Model.TypeName) class.
         /// </summary>
         /// <param name='client'>
@@ -25,13 +33,14 @@ namespace @Settings.Namespace
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public @(Model.TypeName)(@Model.CodeModel.Name client)
+        public @(Model.TypeName)(@Model.CodeModel.Name client, ILogger<@Model.TypeName> logger = null)
         {
             if (client == null) 
             {
                 throw new System.ArgumentNullException("client");
             }
             this.Client = client;
+            this._logger = logger;
         }
         @EmptyLine
         /// <summary>
