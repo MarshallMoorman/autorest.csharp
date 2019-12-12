@@ -74,7 +74,7 @@ if (Model.IsCustomBaseUri)
 else
 {
 @:var _baseUrl = @(Model.ClientReference).BaseUri.AbsoluteUri;
-@:var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "@(Model.Url.TrimStart('/'))").ToString();
+@:var _url = new System.Uri(new System.Uri(EnsurePathEndsInSlashUnlessEmpty(_baseUrl) + EnsurePathEndsInSlashUnlessEmpty(RelativePath)), "@(Model.Url.TrimStart('/'))").ToString();
 }    
 }
 @(Model.BuildUrl("_url"))

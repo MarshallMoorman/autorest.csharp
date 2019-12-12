@@ -17,6 +17,11 @@ namespace @Settings.Namespace
     /// </summary>
     public partial interface I@(Model.TypeName)
     {
+        /// <summary>
+        /// Gets or sets the a relative path to be used between the host and service path
+        /// </summary>
+        string RelativePath { get; set; }
+        @EmptyLine
     @foreach(MethodCs method in Model.Methods)
     {
         if (method.ExcludeFromInterface)

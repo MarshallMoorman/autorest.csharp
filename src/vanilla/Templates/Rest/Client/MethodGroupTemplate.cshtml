@@ -48,10 +48,25 @@ namespace @Settings.Namespace
         /// </summary>
         public @Model.CodeModel.Name Client { get; private set; }
         @EmptyLine
+        /// <summary>
+        /// Gets or sets the a relative path to be used between the host and service path
+        /// </summary>
+        public string RelativePath { get; set; } = string.Empty;
+        @EmptyLine
         @foreach (MethodCs method in Model.Methods)
         {
         @:@(Include(new MethodTemplate(), method))
         @EmptyLine
+        }
+
+        private string EnsurePathEndsInSlashUnlessEmpty(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return string.Empty;
+            }
+            @EmptyLine
+            return path + (path.EndsWith("/") ? "" : "/");
         }
     }
 }
